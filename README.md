@@ -1,4 +1,4 @@
-# Azure App Platform — Terraform Root Module
+# Azure App Platform
 
 Provisions a production-ready Azure application platform with App Service, PostgreSQL Flexible Server, Key Vault, and full network isolation. All secrets are stored in Key Vault and accessed via managed identity; no credentials touch app config directly.
 
