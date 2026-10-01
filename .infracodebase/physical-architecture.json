@@ -1,0 +1,271 @@
+{
+  "name": "Physical Architecture",
+  "nodes": [
+    {
+      "id": "rg",
+      "label": "Resource Group",
+      "subtitle": "<prefix>-rg",
+      "type": "container",
+      "x": 0,
+      "y": 0,
+      "width": 1690,
+      "height": 1290,
+      "icon": "azure/management/resource-group.svg"
+    },
+    {
+      "id": "vnet",
+      "label": "Virtual Network",
+      "subtitle": "10.0.0.0/16",
+      "type": "container",
+      "x": 90,
+      "y": 90,
+      "width": 1510,
+      "height": 510,
+      "icon": "azure/networking/virtual-network.svg",
+      "parentId": "rg"
+    },
+    {
+      "id": "app-subnet",
+      "label": "App Subnet",
+      "subtitle": "10.0.1.0/24 \u00b7 Web/serverFarms delegation",
+      "type": "container",
+      "x": 90,
+      "y": 90,
+      "width": 300,
+      "height": 330,
+      "icon": "azure/networking/subnet.svg",
+      "parentId": "vnet",
+      "decorators": [
+        {
+          "icon": "azure/networking/network-security-group.svg",
+          "position": "top-right"
+        }
+      ]
+    },
+    {
+      "id": "pe-subnet",
+      "label": "PE Subnet",
+      "subtitle": "10.0.3.0/24",
+      "type": "container",
+      "x": 490,
+      "y": 90,
+      "width": 530,
+      "height": 330,
+      "icon": "azure/networking/subnet.svg",
+      "parentId": "vnet",
+      "decorators": [
+        {
+          "icon": "azure/networking/network-security-group.svg",
+          "position": "top-right"
+        }
+      ]
+    },
+    {
+      "id": "db-subnet",
+      "label": "DB Subnet",
+      "subtitle": "10.0.2.0/24 \u00b7 PostgreSQL delegation",
+      "type": "container",
+      "x": 1120,
+      "y": 90,
+      "width": 300,
+      "height": 330,
+      "icon": "azure/networking/subnet.svg",
+      "parentId": "vnet",
+      "decorators": [
+        {
+          "icon": "azure/networking/network-security-group.svg",
+          "position": "top-right"
+        }
+      ]
+    },
+    {
+      "id": "kv-pe",
+      "label": "Private Endpoint",
+      "subtitle": "<prefix>-kv-pe",
+      "x": 90,
+      "y": 90,
+      "icon": "azure/networking/private-endpoint.svg",
+      "parentId": "pe-subnet"
+    },
+    {
+      "id": "app-pe",
+      "label": "Private Endpoint",
+      "subtitle": "<prefix>-app-pe",
+      "x": 320,
+      "y": 90,
+      "icon": "azure/networking/private-endpoint.svg",
+      "parentId": "pe-subnet"
+    },
+    {
+      "id": "postgres",
+      "label": "PostgreSQL Flexible Server",
+      "subtitle": "Standard_D2s_v3 \u00b7 v16",
+      "x": 90,
+      "y": 90,
+      "icon": "azure/data/azure-database-for-postgresql.svg",
+      "parentId": "db-subnet",
+      "decorators": [
+        {
+          "icon": "azure/management/resource-lock.svg",
+          "position": "top-right"
+        },
+        {
+          "icon": "azure/management/azure-monitor.svg",
+          "position": "bottom-right"
+        }
+      ]
+    },
+    {
+      "id": "dns-kv",
+      "label": "Private DNS Zone",
+      "subtitle": "privatelink.vaultcore.azure.net",
+      "x": 90,
+      "y": 700,
+      "icon": "azure/networking/dns-zone-(private).svg",
+      "parentId": "rg"
+    },
+    {
+      "id": "keyvault",
+      "label": "Key Vault",
+      "subtitle": "RBAC \u00b7 standard",
+      "x": 670,
+      "y": 700,
+      "icon": "azure/security/key-vault.svg",
+      "parentId": "rg",
+      "decorators": [
+        {
+          "icon": "azure/management/resource-lock.svg",
+          "position": "top-right"
+        },
+        {
+          "icon": "azure/management/azure-monitor.svg",
+          "position": "bottom-right"
+        }
+      ]
+    },
+    {
+      "id": "webapp",
+      "label": "Linux Web App",
+      "subtitle": "Node 20 LTS \u00b7 HTTPS only",
+      "x": 900,
+      "y": 700,
+      "icon": "azure/application/app-service.svg",
+      "parentId": "rg",
+      "decorators": [
+        {
+          "icon": "azure/identity/managed-identity.svg",
+          "position": "top-right"
+        },
+        {
+          "icon": "azure/management/resource-lock.svg",
+          "position": "bottom-left"
+        },
+        {
+          "icon": "azure/management/azure-monitor.svg",
+          "position": "bottom-right"
+        }
+      ]
+    },
+    {
+      "id": "dns-pg",
+      "label": "Private DNS Zone",
+      "subtitle": "privatelink.postgres.database.azure.com",
+      "x": 1300,
+      "y": 700,
+      "icon": "azure/networking/dns-zone-(private).svg",
+      "parentId": "rg"
+    },
+    {
+      "id": "asp",
+      "label": "App Service Plan",
+      "subtitle": "Linux \u00b7 P1v3",
+      "x": 900,
+      "y": 1000,
+      "icon": "azure/application/app-service-plan.svg",
+      "parentId": "rg"
+    },
+    {
+      "id": "law",
+      "label": "Log Analytics Workspace",
+      "subtitle": "PerGB2018 \u00b7 90d",
+      "x": 1200,
+      "y": 1000,
+      "icon": "azure/management/log-analytics-workspace.svg",
+      "parentId": "rg"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "kv-pe",
+      "target": "keyvault",
+      "label": "Private Link"
+    },
+    {
+      "id": "e2",
+      "source": "app-pe",
+      "target": "webapp",
+      "label": "Private Link"
+    },
+    {
+      "id": "e3",
+      "source": "webapp",
+      "target": "asp",
+      "label": "hosted on"
+    },
+    {
+      "id": "e4",
+      "source": "dns-pg",
+      "target": "postgres",
+      "label": "DNS resolution"
+    },
+    {
+      "id": "e5",
+      "source": "dns-kv",
+      "target": "kv-pe",
+      "label": "DNS resolution"
+    },
+    {
+      "id": "e6",
+      "source": "webapp",
+      "target": "kv-pe",
+      "label": "Key Vault Reference"
+    },
+    {
+      "id": "e7",
+      "source": "webapp",
+      "target": "postgres",
+      "label": "TCP/5432"
+    },
+    {
+      "id": "e8",
+      "source": "webapp",
+      "target": "app-subnet",
+      "label": "VNet Integration"
+    },
+    {
+      "id": "e9",
+      "source": "postgres",
+      "target": "keyvault",
+      "label": "stores DB password"
+    },
+    {
+      "id": "e10",
+      "source": "keyvault",
+      "target": "law",
+      "label": "logs to"
+    },
+    {
+      "id": "e11",
+      "source": "postgres",
+      "target": "law",
+      "label": "logs to"
+    },
+    {
+      "id": "e12",
+      "source": "webapp",
+      "target": "law",
+      "label": "logs to"
+    }
+  ]
+}
